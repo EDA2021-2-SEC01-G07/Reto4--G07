@@ -30,6 +30,7 @@ from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
 from DISClib.DataStructures import mapentry as me
 from DISClib.Algorithms.Sorting import shellsort as sa
+from DISClib.ADT import orderedmap as om
 from DISClib.ADT.graph import gr
 assert cf
 
@@ -53,6 +54,7 @@ def newCatalog():
                             directed=False,
                             size=14000,
                             comparefunction=compareID)
+    catalog['latitude'] = om.newMap(omaptype="RBT", comparefunction=compareLatitude)
     catalog['airports'] = mp.newMap(3200, 
                                    maptype='CHAINING',
                                    loadfactor=3,
@@ -77,6 +79,18 @@ def addAirport(catalog, airport):
         gr.insertVertex(catalog['strong_connections'],airport['IATA'])
     
     mp.put(catalog['airports'], airport['IATA'], airport)
+
+    lat = round(float(airport["Latitude"]), 3)
+    
+    keyval = om.get(catalog["latitude"], lat)
+
+    if keyval is None:
+        airports = lt.newList()
+        om.put(catalog["latitude"], lat, airports)
+    else:
+        airports = me.getValue(keyval)
+
+    lt.addLast(airports, airport)
 
 def addConnections(catalog,route):
     """
@@ -139,6 +153,14 @@ def compareCityName(keyname,city):
     if (keyname == authentry):
         return 0
     elif (keyname > authentry):
+        return 1
+    else:
+        return -1
+
+def compareLatitude(lat1, lat2):
+    if (lat1 == lat2):
+        return 0
+    elif (lat1 > lat2):
         return 1
     else:
         return -1
