@@ -88,7 +88,8 @@ def addConnections(catalog,route):
     
     edgeAB=gr.getEdge(catalog['dir_connections'],route['Departure'], route['Destination'])
     edgeBA=gr.getEdge(catalog['dir_connections'],route['Destination'], route['Departure'])
-    if edgeAB is not None and edgeBA is not None: 
+    edge2=gr.getEdge(catalog['strong_connections'], route['Departure'], route['Destination'])
+    if edgeAB is not None and edgeBA is not None and edge2 is None: 
         gr.addEdge(catalog['strong_connections'], route['Departure'], route['Destination'], route['distance_km'])
 
 def addCity(catalog,city):
