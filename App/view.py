@@ -55,7 +55,7 @@ while True:
         print("Cargando información de los archivos ....")
         catalog=controller.newCatalog()
         controller.loadData(catalog)
-        print(catalog)
+        print(catalog['cities'])
     elif int(inputs[0]) == 2:#Req1
         pass
     elif int(inputs[0]) == 3:#Req2

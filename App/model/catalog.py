@@ -53,17 +53,49 @@ def newCatalog():
                             directed=False,
                             size=14000,
                             comparefunction=compareID)
+    catalog['airports'] = mp.newMap(3200, 
+                                   maptype='CHAINING',
+                                   loadfactor=3,
+                                   comparefunction=compareAirportID)
+    catalog['cities'] = mp.newMap(10500, 
+                                   maptype='CHAINING',
+                                   loadfactor=4,
+                                   comparefunction=compareCityName)
     return catalog
 # Funciones para agregar informacion al catalogo
 def addAirport(catalog, airport):
+    """
+    Añade los vertices a los grafos de aerolinea
+        El nombre del vertice es el codigo IATA del aeropuerto
+    Añade al diccionario airports la informacion de cada aeropuerto
+        La llave es el IATA, el valor es toda la informacion
+    """
     if not gr.containsVertex(catalog['dir_connections'],airport['IATA']):
         gr.insertVertex(catalog['dir_connections'],airport['IATA'])
+
     if not gr.containsVertex(catalog['strong_connections'],airport['IATA']):
         gr.insertVertex(catalog['strong_connections'],airport['IATA'])
-def addConnections(catalog,route):
     
-    gr.addEdge(catalog['dir_connections'], route['Departure'], route['Destination'], route['distance_km'])
-    gr.addEdge(catalog['strong_connections'], route['Departure'], route['Destination'], route['distance_km'])
+    mp.put(catalog['airports'], airport['IATA'], airport)
+
+def addConnections(catalog,route):
+    """
+    Crea los arcos para los vertices en el grafo dirigido y en el no dirigido.
+    """
+    edge1=gr.getEdge(catalog['dir_connections'],route['Departure'], route['Destination'])
+    if edge1 is None: 
+        gr.addEdge(catalog['dir_connections'], route['Departure'], route['Destination'], route['distance_km'])
+    
+    edge2=gr.getEdge(catalog['strong_connections'],route['Departure'], route['Destination'])
+    if edge2 is None: 
+        gr.addEdge(catalog['strong_connections'], route['Departure'], route['Destination'], route['distance_km'])
+
+def addCity(catalog,city):
+    """
+    Crea el mapa para ciudades
+        La llave es el nombre de la ciudad, el valor es toda la info.
+    """
+    mp.put(catalog['cities'], city['city_ascii'],city)
 # Funciones para creacion de datos
 
 # Funciones de consulta
@@ -83,6 +115,30 @@ def compareID(stat1, stat2):
     if (stat1 == dict_stat2):
         return 0
     elif (stat1 > dict_stat2):
+        return 1
+    else:
+        return -1
+
+def compareAirportID(keyname,airID):
+    """
+    Compara dos id de aeropuertos
+    """
+    authentry = me.getKey(airID)
+    if (keyname == authentry):
+        return 0
+    elif (keyname > authentry):
+        return 1
+    else:
+        return -1
+
+def compareCityName(keyname,city):
+    """
+    Compara dos nombres de ciudades.
+    """
+    authentry = me.getKey(city)
+    if (keyname == authentry):
+        return 0
+    elif (keyname > authentry):
         return 1
     else:
         return -1

@@ -48,17 +48,20 @@ def loadData(catalog):
     Carga los datos de los archivos y cargar los datos en la
     estructura de datos
     """
-    routes = cf.data_dir + 'routes_full.csv'
-    routes_file = csv.DictReader(open(routes, encoding='utf-8'))
-
     airports = cf.data_dir + 'airports_full.csv'
     airports_file = csv.DictReader(open(airports, encoding='utf-8'))
-
     for airport in airports_file:
         ct.addAirport(catalog, airport)
-
+    
+    routes = cf.data_dir + 'routes_full.csv'
+    routes_file = csv.DictReader(open(routes, encoding='utf-8'))
     for route in routes_file:
         ct.addConnections(catalog, route)
+
+    cities = cf.data_dir + 'worldcities.csv'
+    city_file = csv.DictReader(open(cities, encoding='utf-8'))
+    for city in city_file:
+        ct.addCity(catalog,city)
     return catalog
 # Funciones de ordenamiento
 
