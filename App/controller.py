@@ -20,8 +20,14 @@
  * along withthis program.  If not, see <http://www.gnu.org/licenses/>.
  """
 
+import sys
 import config as cf
-import model
+import model.catalog as ct
+# import model.req1 as rq1
+# import model.req2 as rq2
+# import model.req3 as rq3
+# import model.req4 as rq4
+# import model.req5 as rq5
 import csv
 
 
@@ -30,9 +36,30 @@ El controlador se encarga de mediar entre la vista y el modelo.
 """
 
 # Inicialización del Catálogo de libros
-
+def newCatalog():
+    """
+    Llama la funcion de inicializacion del catalogo del modelo.
+    """
+    catalog = ct.newCatalog()
+    return catalog
 # Funciones para la carga de datos
+def loadData(catalog):
+    """
+    Carga los datos de los archivos y cargar los datos en la
+    estructura de datos
+    """
+    routes = cf.data_dir + 'routes_full.csv'
+    routes_file = csv.DictReader(open(routes, encoding='utf-8'))
 
+    airports = cf.data_dir + 'airports_full.csv'
+    airports_file = csv.DictReader(open(airports, encoding='utf-8'))
+
+    for airport in airports_file:
+        ct.addAirport(catalog, airport)
+
+    for route in routes_file:
+        ct.addConnections(catalog, route)
+    return catalog
 # Funciones de ordenamiento
 
 # Funciones de consulta sobre el catálogo
