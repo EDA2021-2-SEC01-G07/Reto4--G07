@@ -57,6 +57,8 @@ def loadData(catalog):
     routes_file = csv.DictReader(open(routes, encoding='utf-8'))
     for route in routes_file:
         ct.addConnections(catalog, route)
+    
+    ct.createStrongGraph(catalog)
 
     cities = cf.data_dir + 'worldcities.csv'
     city_file = csv.DictReader(open(cities, encoding='utf-8'))

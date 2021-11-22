@@ -32,6 +32,7 @@ from DISClib.DataStructures import mapentry as me
 from DISClib.Algorithms.Sorting import shellsort as sa
 from DISClib.ADT import orderedmap as om
 from DISClib.ADT.graph import gr
+from model.misc import safeAddEdge, safeInsertVertex
 assert cf
 
 """
@@ -51,9 +52,9 @@ def newCatalog():
                                 size=14000,
                                 comparefunction=compareID)
     catalog['strong_connections'] = gr.newGraph(datastructure='ADJ_LIST',
-                            directed=False,
-                            size=14000,
-                            comparefunction=compareID)
+                                directed=False,
+                                size=14000,
+                                comparefunction=compareID)
     catalog['latitude'] = om.newMap(omaptype="RBT", comparefunction=compareLatitude)
     catalog['airports'] = mp.newMap(3200, 
                                    maptype='CHAINING',
@@ -72,11 +73,7 @@ def addAirport(catalog, airport):
     Añade al diccionario airports la informacion de cada aeropuerto
         La llave es el IATA, el valor es toda la informacion
     """
-    if not gr.containsVertex(catalog['dir_connections'],airport['IATA']):
-        gr.insertVertex(catalog['dir_connections'],airport['IATA'])
-
-    if not gr.containsVertex(catalog['strong_connections'],airport['IATA']):
-        gr.insertVertex(catalog['strong_connections'],airport['IATA'])
+    safeInsertVertex(catalog['dir_connections'],airport['IATA'])
     
     mp.put(catalog['airports'], airport['IATA'], airport)
 
@@ -92,18 +89,37 @@ def addAirport(catalog, airport):
 
     lt.addLast(airports, airport)
 
-def addConnections(catalog,route):
+def addConnections(catalog, route):
     """
     Crea los arcos para los vertices en el grafo dirigido y en el no dirigido.
     """
-    edge1=gr.getEdge(catalog['dir_connections'],route['Departure'], route['Destination'])
-    if edge1 is None: 
-        gr.addEdge(catalog['dir_connections'], route['Departure'], route['Destination'], route['distance_km'])
+    dgraph = catalog['dir_connections']
+
+    departure_node = route['Departure']
+    destination_node = route['Destination']
+
+    safeAddEdge(dgraph, departure_node, destination_node, route['distance_km'], "dgraph")
+
+def createStrongGraph(catalog):
+
+    dgraph = catalog['dir_connections']
+    sgraph = catalog['strong_connections']
+
+    for edge in lt.iterator(gr.edges(dgraph)):
+        if gr.getEdge(dgraph, edge["vertexB"], edge["vertexA"]) is not None:
+            safeInsertVertex(sgraph, edge["vertexA"])
+            safeInsertVertex(sgraph, edge["vertexB"])
+            safeAddEdge(sgraph, edge["vertexA"], edge["vertexB"], edge["weight"], "sgraph")
     
-    edgeAB=gr.getEdge(catalog['dir_connections'],route['Departure'], route['Destination'])
-    edgeBA=gr.getEdge(catalog['dir_connections'],route['Destination'], route['Departure'])
-    if edgeAB is not None and edgeBA is not None: 
-        gr.addEdge(catalog['strong_connections'], route['Departure'], route['Destination'], route['distance_km'])
+    for edge in lt.iterator(gr.edges(dgraph)):
+        print(edge)
+    print(sgraph)
+    print(gr.numEdges(sgraph))
+        
+
+
+    
+
 
 def addCity(catalog,city):
     """
