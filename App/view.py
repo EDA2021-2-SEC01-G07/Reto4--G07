@@ -25,7 +25,8 @@ import sys
 import controller
 from DISClib.ADT import list as lt
 assert cf
-
+default_limit = 1000 
+sys.setrecursionlimit(default_limit*100)
 
 """
 La vista se encarga de la interacción con el usuario
@@ -56,6 +57,7 @@ while True:
         catalog=controller.newCatalog()
         controller.loadData(catalog)
     elif int(inputs[0]) == 2:#Req1
+        result=controller.findInterconected(catalog)
         pass
     elif int(inputs[0]) == 3:#Req2
         pass

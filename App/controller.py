@@ -23,7 +23,7 @@
 import sys
 import config as cf
 import model.catalog as ct
-# import model.req1 as rq1
+import model.req1 as rq1
 # import model.req2 as rq2
 # import model.req3 as rq3
 # import model.req4 as rq4
@@ -66,3 +66,5 @@ def loadData(catalog):
 # Funciones de ordenamiento
 
 # Funciones de consulta sobre el catálogo
+def findInterconected(catalog):
+    return rq1.findInterconected(catalog)
