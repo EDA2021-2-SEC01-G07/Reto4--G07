@@ -24,7 +24,7 @@ import sys
 import config as cf
 import model.catalog as ct
 # import model.req1 as rq1
-import model.requirements.req2 as rq2
+import model.req2 as rq2
 import model.req1 as rq1
 # import model.req2 as rq2
 # import model.req3 as rq3
