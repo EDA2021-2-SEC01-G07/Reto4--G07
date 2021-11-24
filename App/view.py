@@ -48,6 +48,7 @@ catalog = None
 """
 Menu principal
 """
+sys.setrecursionlimit(10000)
 while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n')
@@ -58,7 +59,7 @@ while True:
     elif int(inputs[0]) == 2:#Req1
         pass
     elif int(inputs[0]) == 3:#Req2
-        pass
+        print(controller.req2(catalog, input("Iata 1: "), input("Iata 2: ")))
     elif int(inputs[0]) == 4:#Req3
         pass
     elif int(inputs[0]) == 5:#Req4

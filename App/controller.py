@@ -24,7 +24,7 @@ import sys
 import config as cf
 import model.catalog as ct
 # import model.req1 as rq1
-# import model.req2 as rq2
+import model.requirements.req2 as rq2
 # import model.req3 as rq3
 # import model.req4 as rq4
 # import model.req5 as rq5
@@ -54,17 +54,20 @@ def loadData(catalog):
         ct.addAirport(catalog, airport)
     
     routes = cf.data_dir + 'routes_full.csv'
-    routes_file = csv.DictReader(open(routes, encoding='utf-8'))
+    routes_file = csv.DictReader(open(routes, encoding='utf-8'))    
     for route in routes_file:
         ct.addConnections(catalog, route)
     
-    ct.createStrongGraph(catalog)
+    ct.loadStronglyConnected(catalog)
 
     cities = cf.data_dir + 'worldcities.csv'
     city_file = csv.DictReader(open(cities, encoding='utf-8'))
     for city in city_file:
         ct.addCity(catalog,city)
     return catalog
+
+def req2(catalog, iata1, iata2):
+    return rq2.req2(catalog, iata1, iata2)
 # Funciones de ordenamiento
 
 # Funciones de consulta sobre el catálogo

@@ -32,6 +32,7 @@ from DISClib.DataStructures import mapentry as me
 from DISClib.Algorithms.Sorting import shellsort as sa
 from DISClib.ADT import orderedmap as om
 from DISClib.ADT.graph import gr
+from DISClib.Algorithms.Graphs.scc import KosarajuSCC
 from model.misc import safeAddEdge, safeInsertVertex
 assert cf
 
@@ -44,17 +45,18 @@ los mismos.
 def newCatalog():
     catalog={
         'dir_connections': None,
-        'strong_connections': None,
+        'dual_connections': None,
         'airports':None
     }
     catalog['dir_connections'] = gr.newGraph(datastructure='ADJ_LIST',
                                 directed=True,
                                 size=14000,
                                 comparefunction=compareID)
-    catalog['strong_connections'] = gr.newGraph(datastructure='ADJ_LIST',
+    catalog['dual_connections'] = gr.newGraph(datastructure='ADJ_LIST',
                                 directed=False,
                                 size=14000,
                                 comparefunction=compareID)
+    catalog['kosaraju_connections'] = {}
     catalog['latitude'] = om.newMap(omaptype="RBT", comparefunction=compareLatitude)
     catalog['airports'] = mp.newMap(3200, 
                                    maptype='CHAINING',
@@ -94,31 +96,17 @@ def addConnections(catalog, route):
     Crea los arcos para los vertices en el grafo dirigido y en el no dirigido.
     """
     dgraph = catalog['dir_connections']
+    sgraph = catalog['dual_connections']
 
     departure_node = route['Departure']
     destination_node = route['Destination']
 
-    safeAddEdge(dgraph, departure_node, destination_node, route['distance_km'], "dgraph")
+    safeAddEdge(dgraph, departure_node, destination_node, route['distance_km'])
 
-def createStrongGraph(catalog):
-
-    dgraph = catalog['dir_connections']
-    sgraph = catalog['strong_connections']
-
-    for edge in lt.iterator(gr.edges(dgraph)):
-        if gr.getEdge(dgraph, edge["vertexB"], edge["vertexA"]) is not None:
-            safeInsertVertex(sgraph, edge["vertexA"])
-            safeInsertVertex(sgraph, edge["vertexB"])
-            safeAddEdge(sgraph, edge["vertexA"], edge["vertexB"], edge["weight"], "sgraph")
-    
-    for edge in lt.iterator(gr.edges(dgraph)):
-        print(edge)
-    print(sgraph)
-    print(gr.numEdges(sgraph))
-        
-
-
-    
+    if gr.getEdge(dgraph, destination_node, departure_node) is not None:
+        safeInsertVertex(sgraph, departure_node)
+        safeInsertVertex(sgraph, destination_node)
+        safeAddEdge(sgraph, departure_node, destination_node, route['distance_km'])
 
 
 def addCity(catalog,city):
@@ -127,6 +115,9 @@ def addCity(catalog,city):
         La llave es el nombre de la ciudad, el valor es toda la info.
     """
     mp.put(catalog['cities'], city['city_ascii'],city)
+
+def loadStronglyConnected(catalog):
+    catalog["kosaraju_connections"] = KosarajuSCC(catalog['dir_connections'])
 # Funciones para creacion de datos
 
 # Funciones de consulta
