@@ -109,12 +109,21 @@ def addConnections(catalog, route):
         safeAddEdge(sgraph, departure_node, destination_node, route['distance_km'])
 
 
-def addCity(catalog,city):
+def addCity(catalog,wcity):
     """
     Crea el mapa para ciudades
         La llave es el nombre de la ciudad, el valor es toda la info.
     """
-    mp.put(catalog['cities'], city['city_ascii'],city)
+    cities=catalog['cities']
+    city_name=wcity['city_ascii']
+    existCity = mp.contains(cities,city_name)
+    if existCity:
+        city=me.getValue(mp.get(cities,city_name))
+    else:
+        city=lt.newList("ARRAY_LIST")
+        mp.put(cities,city_name,city)
+    lt.addLast(city,wcity)
+    
 
 def loadStronglyConnected(catalog):
     catalog["kosaraju_connections"] = KosarajuSCC(catalog['dir_connections'])

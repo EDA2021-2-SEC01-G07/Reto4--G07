@@ -27,7 +27,8 @@ from DISClib.ADT import list as lt
 assert cf
 default_limit = 1000 
 sys.setrecursionlimit(default_limit*100)
-
+from DISClib.ADT import map as mp
+import model.misc as mc
 """
 La vista se encarga de la interacción con el usuario
 Presenta el menu de opciones y por cada seleccion
@@ -63,6 +64,10 @@ while True:
     elif int(inputs[0]) == 3:#Req2
         print(controller.req2(catalog, input("Iata 1: "), input("Iata 2: ")))
     elif int(inputs[0]) == 4:#Req3
+        city=mp.get(catalog['cities'],'Washington')
+        
+        # result=mc.cityToAirport(catalog,city)
+        # print(result)
         pass
     elif int(inputs[0]) == 5:#Req4
         pass
