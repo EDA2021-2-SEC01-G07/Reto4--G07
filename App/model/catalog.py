@@ -82,7 +82,7 @@ def addAirport(catalog, airport):
     lat = round(float(airport["Latitude"]), 3)
     
     keyval = om.get(catalog["latitude"], lat)
-
+    
     if keyval is None:
         airports = lt.newList()
         om.put(catalog["latitude"], lat, airports)
@@ -91,7 +91,7 @@ def addAirport(catalog, airport):
 
     lt.addLast(airports, airport)
 
-def addConnections(catalog, route):
+def addConnections(catalog, route, firstdir):
     """
     Crea los arcos para los vertices en el grafo dirigido y en el no dirigido.
     """
@@ -102,12 +102,14 @@ def addConnections(catalog, route):
     destination_node = route['Destination']
 
     safeAddEdge(dgraph, departure_node, destination_node, route['distance_km'])
-
+    
     if gr.getEdge(dgraph, destination_node, departure_node) is not None:
+        if firstdir == None:
+            firstdir = departure_node
         safeInsertVertex(sgraph, departure_node)
         safeInsertVertex(sgraph, destination_node)
         safeAddEdge(sgraph, departure_node, destination_node, route['distance_km'])
-
+    return firstdir
 
 def addCity(catalog,wcity):
     """

@@ -52,21 +52,27 @@ def loadData(catalog):
     """
     airports = cf.data_dir + 'airports_full.csv'
     airports_file = csv.DictReader(open(airports, encoding='utf-8'))
+    first=next(airports_file)
+    firstdir=None
+    ct.addAirport(catalog,first)
     for airport in airports_file:
         ct.addAirport(catalog, airport)
     
     routes = cf.data_dir + 'routes_full.csv'
     routes_file = csv.DictReader(open(routes, encoding='utf-8'))    
     for route in routes_file:
-        ct.addConnections(catalog, route)
+        a = ct.addConnections(catalog, route, firstdir)
+        if a !=None and firstdir==None:
+            firstdir = a
     
     ct.loadStronglyConnected(catalog)
 
     cities = cf.data_dir + 'worldcities.csv'
     city_file = csv.DictReader(open(cities, encoding='utf-8'))
     for city in city_file:
+        last = city
         ct.addCity(catalog,city)
-    return catalog
+    return catalog, first, firstdir, last
 
 def req2(catalog, iata1, iata2):
     return rq2.req2(catalog, iata1, iata2)

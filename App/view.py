@@ -28,7 +28,8 @@ assert cf
 default_limit = 1000 
 sys.setrecursionlimit(default_limit*100)
 from DISClib.ADT import map as mp
-import model.misc as mc
+import prettytable as pt
+from DISClib.ADT.graph import gr
 """
 La vista se encarga de la interacción con el usuario
 Presenta el menu de opciones y por cada seleccion
@@ -57,7 +58,23 @@ while True:
     if int(inputs[0]) == 1:
         print("Cargando información de los archivos ....")
         catalog=controller.newCatalog()
-        controller.loadData(catalog)
+        ctr=controller.loadData(catalog)
+        print('Aeropuertos en el grafo dirigido: ', gr.numVertices(catalog['dir_connections']))
+        print('Aeropuertos en el grafo no dirigido: ', gr.numVertices(catalog['dual_connections']))
+        print('El total de ciudades cargadas es de: ', mp.size(catalog['cities']))
+        print('Informacion de los primeros aeropuertos cargados a los grafos: ')
+        firstdir=mp.get(catalog['airports'], ctr[2])['value']
+        table=pt.PrettyTable(hrules=pt.ALL)
+        table.field_names=['Name','City','Country','Latitude','Longitude']
+        table.add_row([ctr[1]['Name'],ctr[1]['City'],ctr[1]['Country'],round(float(ctr[1]['Latitude']),2),round(float(ctr[1]['Longitude']),2)])
+        table.add_row([firstdir['Name'],firstdir['City'],firstdir['Country'],round(float(firstdir['Latitude']),2),round(float(firstdir['Longitude']),2)])
+        print(table)
+
+        print('Informacion de la ultima ciudad cargada:')
+        table2=pt.PrettyTable(hrules=pt.ALL)
+        table2.field_names=['Population','Latitude','Longitude']
+        table2.add_row([ctr[3]['population'],round(float(ctr[3]['lat']),2),round(float(ctr[3]['lng']),2)])
+        print(table2)
     elif int(inputs[0]) == 2:#Req1
         result=controller.findInterconected(catalog)
         pass
