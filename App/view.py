@@ -30,6 +30,7 @@ sys.setrecursionlimit(default_limit*100)
 from DISClib.ADT import map as mp
 import prettytable as pt
 from DISClib.ADT.graph import gr
+
 """
 La vista se encarga de la interacción con el usuario
 Presenta el menu de opciones y por cada seleccion
@@ -77,12 +78,38 @@ while True:
         print(table2)
     elif int(inputs[0]) == 2:#Req1
         result=controller.findInterconected(catalog)
+        top=lt.subList(result,1,5)
+        print('El numero de aeropuertos interconectados es de: ',lt.size(result))
+        
+        table=pt.PrettyTable(hrules=pt.ALL)
+        table.field_names=['IATA','Name','City','Country']
+        for a in lt.iterator(top):
+            info=mp.get(catalog['airports'],a['Airport'])['value']
+            table.add_row([info['IATA'],info['Name'],info['City'],info['Country']])
+        print('Los top 5 aeropuertos mas interconectados son:\n')    
+        print(table)    
         pass
     elif int(inputs[0]) == 3:#Req2
         print(controller.req2(catalog, input("Iata 1: "), input("Iata 2: ")))
     elif int(inputs[0]) == 4:#Req3
-        city=mp.get(catalog['cities'],'Washington')
-        
+        origin=input('Ciudad de salida: ')
+        destiny=input('Ciudad de llegada: ')
+        city=mp.get(catalog['cities'],origin)['value']
+
+        if lt.size(city)==1:
+            controller.req3(catalog,city)
+        else:
+            table=pt.PrettyTable(hrules=pt.ALL)
+            table.field_names=['Option','City','Country','Subregion','Latitude','Longitude']
+            opt=1
+            for c in lt.iterator(city):    
+                table.add_row([opt,c['city_ascii'],c['country'],c['admin_name'],c['lat'],c['lng']])
+                opt+=1
+            
+            print(table)
+            city_opt=int(input('Varias ciudades encontradas bajo el mismo nombre, seleccione una opcion:'))
+            selected_city=lt.getElement(city,city_opt)
+            controller.req3(catalog,selected_city)
         # result=mc.cityToAirport(catalog,city)
         # print(result)
         pass

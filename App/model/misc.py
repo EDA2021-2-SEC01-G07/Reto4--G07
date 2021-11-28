@@ -44,3 +44,6 @@ def cityToAirport(catalog,city):
     else:
         airport = lt.firstElement(filtered_list)
     return airport
+
+def chooseCity(city):
+    pass

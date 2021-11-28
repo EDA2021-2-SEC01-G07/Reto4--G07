@@ -14,11 +14,10 @@ def findInterconected(catalog):
     vertex= gr.vertices(catalog['dir_connections'])
     for a in lt.iterator(vertex):
         inter = 0
-        receive = gr.indegree(catalog['dir_connections'],a)
-        out = gr.outdegree(catalog['dir_connections'],a)
-        inter= receive + out
+        inter= gr.indegree(catalog['dir_connections'],a) + gr.outdegree(catalog['dir_connections'],a)
         if inter==0:
             continue
         info={'Airport':a, "Interconnections": inter}
         lt.addLast(interconnections,info)
     ms.sort(interconnections, lambda port1, port2: port1['Interconnections']>port2['Interconnections'])
+    return interconnections
