@@ -3,6 +3,8 @@ from DISClib.ADT.graph import gr
 from DISClib.ADT import list as lt
 import haversine
 from DISClib.ADT import orderedmap as om
+import prettytable as pt
+
 def safeInsertVertex(graph, vertex):
     if not gr.containsVertex(graph, vertex):
         gr.insertVertex(graph, vertex)
@@ -46,4 +48,12 @@ def cityToAirport(catalog,city):
     return airport
 
 def chooseCity(city):
-    pass
+    table=pt.PrettyTable(hrules=pt.ALL)
+    table.field_names=['Option','City','Country','Subregion','Latitude','Longitude']
+    opt=1
+    for c in lt.iterator(city):    
+        table.add_row([opt,c['city_ascii'],c['country'],c['admin_name'],c['lat'],c['lng']])
+        opt+=1
+    
+    print(table)
+    

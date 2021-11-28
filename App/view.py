@@ -30,7 +30,7 @@ sys.setrecursionlimit(default_limit*100)
 from DISClib.ADT import map as mp
 import prettytable as pt
 from DISClib.ADT.graph import gr
-
+from model.misc import chooseCity
 """
 La vista se encarga de la interacción con el usuario
 Presenta el menu de opciones y por cada seleccion
@@ -94,25 +94,23 @@ while True:
     elif int(inputs[0]) == 4:#Req3
         origin=input('Ciudad de salida: ')
         destiny=input('Ciudad de llegada: ')
-        city=mp.get(catalog['cities'],origin)['value']
+        origin_city=mp.get(catalog['cities'],origin)['value']
+        destiny_city=mp.get(catalog['cities'],destiny)['value']
 
-        if lt.size(city)==1:
-            controller.req3(catalog,city)
+        if lt.size(origin_city)>1:
+            chooseCity(origin_city)
+            ocity_opt=int(input('Varias ciudades encontradas bajo el mismo nombre, seleccione una opcion:'))
+            selected_ocity=lt.getElement(origin_city,ocity_opt)
         else:
-            table=pt.PrettyTable(hrules=pt.ALL)
-            table.field_names=['Option','City','Country','Subregion','Latitude','Longitude']
-            opt=1
-            for c in lt.iterator(city):    
-                table.add_row([opt,c['city_ascii'],c['country'],c['admin_name'],c['lat'],c['lng']])
-                opt+=1
-            
-            print(table)
-            city_opt=int(input('Varias ciudades encontradas bajo el mismo nombre, seleccione una opcion:'))
-            selected_city=lt.getElement(city,city_opt)
-            controller.req3(catalog,selected_city)
-        # result=mc.cityToAirport(catalog,city)
-        # print(result)
-        pass
+            selected_ocity=lt.firstElement(origin_city)
+
+        if lt.size(destiny_city)>1:
+            chooseCity(destiny_city)
+            dcity_opt=int(input('Varias ciudades encontradas bajo el mismo nombre, seleccione una opcion:'))
+            selected_dcity=lt.getElement(destiny_city,dcity_opt)
+        else:
+            selected_dcity=lt.firstElement(destiny_city)
+        result=controller.req3(catalog,selected_ocity,selected_dcity)
     elif int(inputs[0]) == 5:#Req4
         pass
     elif int(inputs[0]) == 6:#Req5

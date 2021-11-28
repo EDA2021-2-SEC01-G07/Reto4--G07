@@ -81,5 +81,5 @@ def req2(catalog, iata1, iata2):
 def findInterconected(catalog):
     return rq1.findInterconected(catalog)
 
-def req3(catalog,city):
-    return rq3.shortCityPath(catalog,city)
+def req3(catalog,origin_city,destiny_city):
+    return rq3.shortCityPath(catalog,origin_city,destiny_city)
