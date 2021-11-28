@@ -111,6 +111,7 @@ while True:
         else:
             selected_dcity=lt.firstElement(destiny_city)
         result=controller.req3(catalog,selected_ocity,selected_dcity)
+        print(result)
     elif int(inputs[0]) == 5:#Req4
         pass
     elif int(inputs[0]) == 6:#Req5
