@@ -45,7 +45,7 @@ def cityToAirport(catalog,city):
                 d=distance
     else:
         airport = lt.firstElement(filtered_list)
-    return airport
+    return airport, d
 
 def chooseCity(city):
     table=pt.PrettyTable(hrules=pt.ALL)

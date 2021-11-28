@@ -1,11 +1,7 @@
-import config as cf
-from DISClib.ADT import list as lt
-from DISClib.ADT import map as mp
-from DISClib.DataStructures import mapentry as me
-from DISClib.Algorithms.Sorting import shellsort as sa
-from DISClib.ADT import orderedmap as om
-from DISClib.ADT.graph import gr
-from model.misc import cityToAirport
+from DISClib.Algorithms.Graphs.dijsktra import Dijkstra, pathTo, distTo
 
-def shortCityPath(catalog,city):
-    pass
+def shortCityPath(catalog, city1, city2):
+    dijsktra = Dijkstra(catalog['dir_connections'], city1)
+    return pathTo(dijsktra, city2), distTo(dijsktra, city2)
+
+    
