@@ -7,8 +7,9 @@ from DISClib.ADT import orderedmap as om
 from DISClib.ADT.graph import gr
 import DISClib.Algorithms.Graphs.prim as pr
 
-pr.PrimMST()
+def Millas(catalog):
+    a=pr.PrimMST(catalog['dir_connections'])
+    
+    pr.edgesMST(catalog['dir_connections'])
 
-pr.edgesMST()
-
-pr.weightMST()
+    pr.weightMST(catalog['dir_connections'])

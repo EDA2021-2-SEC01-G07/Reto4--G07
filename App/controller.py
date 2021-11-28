@@ -27,7 +27,7 @@ import model.catalog as ct
 import model.req2 as rq2
 import model.req1 as rq1
 import model.req3 as rq3
-# import model.req4 as rq4
+import model.req4 as rq4
 # import model.req5 as rq5
 import csv
 
@@ -83,3 +83,6 @@ def findInterconected(catalog):
 
 def req3(catalog,origin_city,destiny_city):
     return rq3.shortCityPath(catalog,origin_city,destiny_city)
+
+def req4(catalog):
+    return rq4.Millas(catalog)

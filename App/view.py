@@ -66,15 +66,15 @@ while True:
         print('Informacion de los primeros aeropuertos cargados a los grafos: ')
         firstdir=mp.get(catalog['airports'], ctr[2])['value']
         table=pt.PrettyTable(hrules=pt.ALL)
-        table.field_names=['Name','City','Country','Latitude','Longitude']
-        table.add_row([ctr[1]['Name'],ctr[1]['City'],ctr[1]['Country'],round(float(ctr[1]['Latitude']),2),round(float(ctr[1]['Longitude']),2)])
-        table.add_row([firstdir['Name'],firstdir['City'],firstdir['Country'],round(float(firstdir['Latitude']),2),round(float(firstdir['Longitude']),2)])
+        table.field_names=['Name','City','Country','Latitude','Longitude','Grafo']
+        table.add_row([ctr[1]['Name'],ctr[1]['City'],ctr[1]['Country'],round(float(ctr[1]['Latitude']),2),round(float(ctr[1]['Longitude']),2),'Dirigido'])
+        table.add_row([firstdir['Name'],firstdir['City'],firstdir['Country'],round(float(firstdir['Latitude']),2),round(float(firstdir['Longitude']),2),'No dirigido'])
         print(table)
 
         print('Informacion de la ultima ciudad cargada:')
         table2=pt.PrettyTable(hrules=pt.ALL)
-        table2.field_names=['Population','Latitude','Longitude']
-        table2.add_row([ctr[3]['population'],round(float(ctr[3]['lat']),2),round(float(ctr[3]['lng']),2)])
+        table2.field_names=['City','Population','Latitude','Longitude']
+        table2.add_row([ctr[3]['city_ascii'],ctr[3]['population'],round(float(ctr[3]['lat']),2),round(float(ctr[3]['lng']),2)])
         print(table2)
     elif int(inputs[0]) == 2:#Req1
         result=controller.findInterconected(catalog)
@@ -88,7 +88,7 @@ while True:
             table.add_row([info['IATA'],info['Name'],info['City'],info['Country']])
         print('Los top 5 aeropuertos mas interconectados son:\n')    
         print(table)    
-        pass
+        
     elif int(inputs[0]) == 3:#Req2
         print(controller.req2(catalog, input("Iata 1: "), input("Iata 2: ")))
     elif int(inputs[0]) == 4:#Req3
@@ -111,6 +111,10 @@ while True:
         else:
             selected_dcity=lt.firstElement(destiny_city)
         result=controller.req3(catalog,selected_ocity,selected_dcity)
+
+        print('Aeropuerto de Origen: ')
+        print('Aeropuerto de Salida: ')
+
     elif int(inputs[0]) == 5:#Req4
         pass
     elif int(inputs[0]) == 6:#Req5
