@@ -37,7 +37,7 @@ def cityToAirport(catalog,city):
         d+=10
 
     if lt.size(filtered_list)!=1:
-        for b in lt.airport(filtered_list):
+        for b in lt.iterator(filtered_list):
             airport_coords=(float(b['Latitude']), float(b['Longitude']))
             distance=haversine.haversine(coords,airport_coords)
             if distance < d:
@@ -45,7 +45,7 @@ def cityToAirport(catalog,city):
                 d=distance
     else:
         airport = lt.firstElement(filtered_list)
-    return airport
+    return airport, d
 
 def chooseCity(city):
     table=pt.PrettyTable(hrules=pt.ALL)

@@ -33,6 +33,7 @@ from DISClib.Algorithms.Sorting import shellsort as sa
 from DISClib.ADT import orderedmap as om
 from DISClib.ADT.graph import gr
 from DISClib.Algorithms.Graphs.scc import KosarajuSCC
+from DISClib.Algorithms.Graphs.dijsktra import Dijkstra
 from model.misc import safeAddEdge, safeInsertVertex
 import DISClib.Algorithms.Graphs.prim as pr
 assert cf

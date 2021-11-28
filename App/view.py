@@ -115,6 +115,7 @@ while True:
         print('Aeropuerto de Origen: ')
         print('Aeropuerto de Salida: ')
 
+        print(result)
     elif int(inputs[0]) == 5:#Req4
         pass
     elif int(inputs[0]) == 6:#Req5
