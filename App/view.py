@@ -117,7 +117,7 @@ while True:
 
         print(result)
     elif int(inputs[0]) == 5:#Req4
-        pass
+        controller.req4(catalog)
     elif int(inputs[0]) == 6:#Req5
         pass
 

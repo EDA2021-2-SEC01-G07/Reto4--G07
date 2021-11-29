@@ -11,7 +11,7 @@ def safeInsertVertex(graph, vertex):
 
 def safeAddEdge(graph, vertex1, vertex2, weigth):
     if gr.getEdge(graph, vertex1, vertex2) is None:
-        gr.addEdge(graph, vertex1, vertex2, weigth)
+        gr.addEdge(graph, vertex1, vertex2, float(weigth))
 
 def cityToAirport(catalog,city):
     """

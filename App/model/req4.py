@@ -9,7 +9,7 @@ import DISClib.Algorithms.Graphs.prim as pr
 
 def Millas(catalog):
     a=pr.PrimMST(catalog['dir_connections'])
-    
-    pr.edgesMST(catalog['dir_connections'])
+    # print(a)
+    # pr.edgesMST(catalog['dir_connections'])
 
-    pr.weightMST(catalog['dir_connections'])
+    # pr.weightMST(catalog['dir_connections'])
