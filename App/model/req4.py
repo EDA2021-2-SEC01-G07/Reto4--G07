@@ -6,10 +6,8 @@ from DISClib.Algorithms.Sorting import shellsort as sa
 from DISClib.ADT import orderedmap as om
 from DISClib.ADT.graph import gr
 import DISClib.Algorithms.Graphs.prim as pr
+from DISClib.Algorithms.Graphs.dijsktra import Dijkstra
 
 def Millas(catalog):
-    a=pr.PrimMST(catalog['dir_connections'])
-    # print(a)
-    # pr.edgesMST(catalog['dir_connections'])
-
-    # pr.weightMST(catalog['dir_connections'])
+    #TODO: Usar dijsktra del aeropuerto elegido. Ya existe una funcion para saber el aeropuerto mas cercano
+    pass
