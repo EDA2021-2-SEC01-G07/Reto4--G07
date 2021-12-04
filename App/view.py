@@ -60,8 +60,15 @@ while True:
         print("Cargando información de los archivos ....")
         catalog=controller.newCatalog()
         ctr=controller.loadData(catalog)
-        print('Aeropuertos en el grafo dirigido: ', gr.numVertices(catalog['dir_connections']))
-        print('Aeropuertos en el grafo no dirigido: ', gr.numVertices(catalog['dual_connections']))
+
+        print('='*3,'Airports-Routes DiGraph','='*3)
+        print('Vertices: ', gr.numVertices(catalog['dir_connections']))
+        print('Arcos', gr.numEdges(catalog['dir_connections']))
+
+        print('='*3,'Airports-Routes Graph','='*3)
+        print('Vertices: ', gr.numVertices(catalog['dual_connections']))
+        print('Arcos', gr.numEdges(catalog['dual_connections']))
+
         print('El total de ciudades cargadas es de: ', mp.size(catalog['cities']))
         print('Informacion de los primeros aeropuertos cargados a los grafos: ')
         firstdir=mp.get(catalog['airports'], ctr[2])['value']

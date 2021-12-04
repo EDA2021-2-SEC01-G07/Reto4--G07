@@ -78,7 +78,8 @@ def addAirport(catalog, airport):
         La llave es el IATA, el valor es toda la informacion
     """
     safeInsertVertex(catalog['dir_connections'],airport['IATA'])
-    
+    safeInsertVertex(catalog['dual_connections'],airport['IATA'])
+
     mp.put(catalog['airports'], airport['IATA'], airport)
 
     lat = round(float(airport["Latitude"]), 3)
