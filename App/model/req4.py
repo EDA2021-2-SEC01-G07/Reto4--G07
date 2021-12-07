@@ -29,7 +29,6 @@ def Millas(catalog, city, miles):
     dijkstra = djk.Dijkstra(catalog['dir_connections'],airport['IATA'])
     edges = gr.vertices(catalog['dir_connections'])
     
-    pr.initSearch()
     for e in lt.iterator(edges):
         if djk.hasPathTo(dijkstra,e) == True:
             connected_airport+=1
@@ -40,9 +39,7 @@ def Millas(catalog, city, miles):
                 longest=jumps
                 destination=e
                 destination_dist=distance
-    print(djk.pathTo(dijkstra,'AZN'))
+
     final_path=djk.pathTo(dijkstra,destination)
-    # djk.distTo()
-    # djk.hasPathTo()----------True/false
-    # djk.pathTo()
+
     return airport, connected_airport, total_distance, final_path, destination_dist
