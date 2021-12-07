@@ -84,5 +84,5 @@ def findInterconected(catalog):
 def req3(catalog,origin_city,destiny_city):
     return rq3.shortCityPath(catalog,origin_city,destiny_city)
 
-def req4(catalog):
-    return rq4.Millas(catalog)
+def req4(catalog, city, miles):
+    return rq4.Millas(catalog, city, miles)

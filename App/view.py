@@ -86,14 +86,19 @@ while True:
     elif int(inputs[0]) == 2:#Req1
         result=controller.findInterconected(catalog)
         top=lt.subList(result,1,5)
-        print('El numero de aeropuertos interconectados es de: ',lt.size(result))
+        print('='*7,'Req No. 1 Inputs','='*7)
+        print('Most connected airports in network (TOP 5)')
+        print('Number of airports in network: ', gr.numVertices(catalog['dir_connections']))
         
+        
+        print('\n='*7,'Req No. 1 Answers','='*7)
+        print('Connected airports inside of network: ', lt.size(result))
         table=pt.PrettyTable(hrules=pt.ALL)
-        table.field_names=['IATA','Name','City','Country']
+        table.field_names=['Name','City','Country','IATA','Connections','Inbound','Outbound']
         for a in lt.iterator(top):
             info=mp.get(catalog['airports'],a['Airport'])['value']
-            table.add_row([info['IATA'],info['Name'],info['City'],info['Country']])
-        print('Los top 5 aeropuertos mas interconectados son:\n')    
+            table.add_row([info['Name'],info['City'],info['Country'],info['IATA'],a['Interconnections'],a['Inbound'],a['Outbound']])
+        print('Top 5 most connected airports...\n')    
         print(table)    
         
     elif int(inputs[0]) == 3:#Req2
@@ -124,7 +129,46 @@ while True:
 
         print(result)
     elif int(inputs[0]) == 5:#Req4
-        controller.req4(catalog)
+        city=input('Ingrese la ciudad de origen: ')
+        miles=float(input('Ingrese la cantidad de millas disponibles: '))*1.6
+        ocity=mp.get(catalog['cities'],city)['value']
+        print('1',city)
+        if lt.size(ocity)>1:
+            chooseCity(ocity)
+            ocity_opt=int(input('Varias ciudades encontradas bajo el mismo nombre, seleccione una opcion:'))
+            selected_city=lt.getElement(ocity,ocity_opt)
+        else:
+            selected_city=lt.firstElement(ocity)
+        airport, connected_airport, total_distance, final_path, longest = controller.req4(catalog, selected_city, miles)
+
+        print('='*7,'Req No. 4 Inputs','='*7)
+        print('Departure city name: ', city)
+        print('Available travel miles: ',miles/1.6,'\n') #Convertidas a km
+        print('='*7,'Req No. 4 Answer','='*7)
+        print('Departure airport information: ')
+        table=pt.PrettyTable(hrules=pt.ALL)
+        table.field_names=['IATA','Name','City','Country']    
+        table.add_row([airport['IATA'],airport['Name'],airport['City'],airport['Country']])
+        print(table)
+
+        print('-Number of possible airports:',connected_airport)
+        print('-Max traveling distance between airports:', round(total_distance,2),'(km)')
+        print('-Available traveling miles:', miles,'(km)\n')
+        
+        print('+++ Longest possible route with airport: ',airport['IATA'],'+++')
+        print('- Longests possible path distance: ',round(float(longest),2)*2,'(km) back and forth from the destination.')
+        print('- Longest possible path details: ')
+        table2=pt.PrettyTable(hrules=pt.ALL)
+        table2.field_names=['Departure','Destination','Distance (km)']
+        for a in lt.iterator(final_path):
+            table2.add_row([a['vertexA'],a['vertexB'],round(a['weight'],2)])
+        print(table2)
+        print('-'*5)
+        if longest>miles:
+            print('The passenger needs ', round(longest*2-miles,2),'miles to complete the trip.')
+        else:
+            print('The passenger CAN complete the trip with available miles. ')
+        print('-'*5)
     elif int(inputs[0]) == 6:#Req5
         pass
 
