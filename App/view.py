@@ -108,7 +108,8 @@ while True:
         destiny=input('Ciudad de llegada: ')
         origin_city=mp.get(catalog['cities'],origin)['value']
         destiny_city=mp.get(catalog['cities'],destiny)['value']
-
+        visited=lt.newList(datastructure="ARRAY_LIST")
+        last=''
         if lt.size(origin_city)>1:
             chooseCity(origin_city)
             ocity_opt=int(input('Varias ciudades encontradas bajo el mismo nombre, seleccione una opcion:'))
@@ -122,17 +123,51 @@ while True:
             selected_dcity=lt.getElement(destiny_city,dcity_opt)
         else:
             selected_dcity=lt.firstElement(destiny_city)
-        result=controller.req3(catalog,selected_ocity,selected_dcity)
+        path, distance, airport1, airport2=controller.req3(catalog,selected_ocity,selected_dcity)
 
-        print('Aeropuerto de Origen: ')
-        print('Aeropuerto de Salida: ')
+        print('='*7,'Req No. 3 Inputs','='*7)
+        print('Departure city:', origin)
+        print('Arrival city:', destiny)
 
-        print(result)
+        print('='*7,'Req No. 3 Answer','='*7)
+        print('+'*3, 'The departure airport in',origin, 'is:')
+        table1=pt.PrettyTable(hrules=pt.ALL)
+        table1.field_names=['IATA','Name','City','Country']
+        table1.add_row([airport1['IATA'],airport1['Name'],airport1['City'],airport1['Country']])
+        print(table1,'\n')
+
+        print('+'*3, 'The arrival airport in',destiny, 'is:')
+        table2=pt.PrettyTable(hrules=pt.ALL)
+        table2.field_names=['IATA','Name','City','Country']
+        table2.add_row([airport2['IATA'],airport2['Name'],airport2['City'],airport2['Country']])
+        print(table2,'\n')
+
+        print('+'*3, "Dijkstra's Trip Details",'+'*3)
+        print('- Total distance (including city to airport):', distance)
+        print('- Trip path: ')
+        table3=pt.PrettyTable(hrules=pt.ALL)
+        table3.field_names=['Departure','Destination','Distance (km)']
+        for a in lt.iterator(path):
+            table3.add_row([a['vertexA'],a['vertexB'],round(a['weight'],2)])
+            lt.addLast(visited,a['vertexA'])
+            lt.addLast(visited,a['vertexB'])
+        print(table3)
+
+        print('- Trip stops:')
+        table4=pt.PrettyTable(hrules=pt.ALL)
+        table4.field_names=['IATA','Name','City','Country']
+        for b in lt.iterator(visited):
+            if b==last:
+                continue
+            info=mp.get(catalog['airports'],b)['value']
+            table4.add_row([info['IATA'],info['Name'],info['City'],info['Country']])
+            last=b
+        print(table4)
+
     elif int(inputs[0]) == 5:#Req4
         city=input('Ingrese la ciudad de origen: ')
         miles=float(input('Ingrese la cantidad de millas disponibles: '))*1.6
         ocity=mp.get(catalog['cities'],city)['value']
-        print('1',city)
         if lt.size(ocity)>1:
             chooseCity(ocity)
             ocity_opt=int(input('Varias ciudades encontradas bajo el mismo nombre, seleccione una opcion:'))
