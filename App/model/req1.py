@@ -18,6 +18,7 @@ def findInterconected(catalog):
         if inter==0:
             continue
         info={'Airport':a, "Interconnections": inter,'Inbound': gr.indegree(catalog['dir_connections'],a), 'Outbound':gr.outdegree(catalog['dir_connections'],a) }
+        
         lt.addLast(interconnections,info)
     ms.sort(interconnections, lambda port1, port2: port1['Interconnections']>port2['Interconnections'])
     return interconnections

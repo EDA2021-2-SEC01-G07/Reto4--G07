@@ -9,7 +9,8 @@ from DISClib.ADT.graph import gr
 from model.misc import cityToAirport
 import DISClib.Algorithms.Graphs.prim as pr
 import DISClib.Algorithms.Graphs.dijsktra as djk
-
+import DISClib.Algorithms.Graphs.dfs as dfs
+import DISClib.ADT.queue as q
 def Millas(catalog, city, miles):
     """
     Se hace dijkstra al aeropuerto seleccionado. 
@@ -23,12 +24,37 @@ def Millas(catalog, city, miles):
     """
 
     airport=cityToAirport(catalog, city)[0]
-    connected_airport=0
+    connected_airports=1
     total_distance=0
-    longest=0
-    dijkstra = djk.Dijkstra(catalog['dir_connections'],airport['IATA'])
+    longest=0   
     edges = gr.vertices(catalog['dir_connections'])
+    # ==================================================================================================
+    mst=pr.PrimMST(catalog['dir_connections'])
+
+
+    df=dfs.DepthFirstSearch(catalog['dir_connections'],airport['IATA'])
+    for e in lt.iterator(edges):
+        if dfs.hasPathTo(df,e) == True:
+            connected_airports += 1
+            path_size = lt.size(dfs.pathTo(df,e))
+            if path_size > longest:
+                destination = e
+                longest = path_size
+    final_path=dfs.pathTo(df,destination)
+    vertex_A=airport['IATA']
+    for path in lt.iterator(final_path):
+        connection=gr.getEdge(catalog['dir_connections'],vertex_A,path)
+        if connection != None:
+            total_distance+=connection['weight']
+        vertex_A=path
+        
+    sys.exit(0)
+    return airport, connected_airports, final_path, total_distance
+
     
+    
+    #=======================================================================================================
+
     for e in lt.iterator(edges):
         if djk.hasPathTo(dijkstra,e) == True:
             connected_airport+=1

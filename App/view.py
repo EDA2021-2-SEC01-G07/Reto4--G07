@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along withthis program.  If not, see <http://www.gnu.org/licenses/>.
  """
-
+import time
 import config as cf
 import sys
 import controller
@@ -58,9 +58,10 @@ while True:
     inputs = input('Seleccione una opción para continuar\n')
     if int(inputs[0]) == 1:
         print("Cargando información de los archivos ....")
+        start_time = time.process_time()
         catalog=controller.newCatalog()
         ctr=controller.loadData(catalog)
-
+        end_time=(time.process_time() - start_time)*1000
         print('='*3,'Airports-Routes DiGraph','='*3)
         print('Vertices: ', gr.numVertices(catalog['dir_connections']))
         print('Arcos', gr.numEdges(catalog['dir_connections']))
@@ -83,15 +84,18 @@ while True:
         table2.field_names=['City','Population','Latitude','Longitude']
         table2.add_row([ctr[3]['city_ascii'],ctr[3]['population'],round(float(ctr[3]['lat']),2),round(float(ctr[3]['lng']),2)])
         print(table2)
+        print("The processing time is: ",end_time, " ms.")
     elif int(inputs[0]) == 2:#Req1
+        start_time = time.process_time()
         result=controller.findInterconected(catalog)
         top=lt.subList(result,1,5)
+        end_time=(time.process_time() - start_time)*1000
         print('='*7,'Req No. 1 Inputs','='*7)
         print('Most connected airports in network (TOP 5)')
         print('Number of airports in network: ', gr.numVertices(catalog['dir_connections']))
         
         
-        print('\n='*7,'Req No. 1 Answers','='*7)
+        print('='*7,'Req No. 1 Answers','='*7)
         print('Connected airports inside of network: ', lt.size(result))
         table=pt.PrettyTable(hrules=pt.ALL)
         table.field_names=['Name','City','Country','IATA','Connections','Inbound','Outbound']
@@ -100,7 +104,7 @@ while True:
             table.add_row([info['Name'],info['City'],info['Country'],info['IATA'],a['Interconnections'],a['Inbound'],a['Outbound']])
         print('Top 5 most connected airports...\n')    
         print(table)    
-        
+        print("The processing time is: ",end_time, " ms.")
     elif int(inputs[0]) == 3:#Req2
         print(controller.req2(catalog, input("Iata 1: "), input("Iata 2: ")))
     elif int(inputs[0]) == 4:#Req3
@@ -123,8 +127,10 @@ while True:
             selected_dcity=lt.getElement(destiny_city,dcity_opt)
         else:
             selected_dcity=lt.firstElement(destiny_city)
+        
+        start_time = time.process_time()
         path, distance, airport1, airport2=controller.req3(catalog,selected_ocity,selected_dcity)
-
+        end_time=(time.process_time() - start_time)*1000
         print('='*7,'Req No. 3 Inputs','='*7)
         print('Departure city:', origin)
         print('Arrival city:', destiny)
@@ -163,7 +169,7 @@ while True:
             table4.add_row([info['IATA'],info['Name'],info['City'],info['Country']])
             last=b
         print(table4)
-
+        print("The processing time is: ",end_time, " ms.")
     elif int(inputs[0]) == 5:#Req4
         city=input('Ingrese la ciudad de origen: ')
         miles=float(input('Ingrese la cantidad de millas disponibles: '))*1.6
@@ -174,7 +180,10 @@ while True:
             selected_city=lt.getElement(ocity,ocity_opt)
         else:
             selected_city=lt.firstElement(ocity)
+
+        start_time = time.process_time()
         airport, connected_airport, total_distance, final_path, longest = controller.req4(catalog, selected_city, miles)
+        end_time=(time.process_time() - start_time)*1000
 
         print('='*7,'Req No. 4 Inputs','='*7)
         print('Departure city name: ', city)
@@ -204,6 +213,8 @@ while True:
         else:
             print('The passenger CAN complete the trip with available miles. ')
         print('-'*5)
+        print("The processing time is: ",end_time, " ms.")
+        
     elif int(inputs[0]) == 6:#Req5
         pass
 
