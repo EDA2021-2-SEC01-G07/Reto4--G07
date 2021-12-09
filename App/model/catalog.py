@@ -68,6 +68,10 @@ def newCatalog():
                                    maptype='CHAINING',
                                    loadfactor=4,
                                    comparefunction=compareCityName)
+    catalog['reverse_edges'] = mp.newMap(10500, 
+                                   maptype='CHAINING',
+                                   loadfactor=4,
+                                   comparefunction=compareCityName)
     return catalog
 # Funciones para agregar informacion al catalogo
 def addAirport(catalog, airport):
@@ -105,6 +109,11 @@ def addConnections(catalog, route, firstdir):
     destination_node = route['Destination']
 
     safeAddEdge(dgraph, departure_node, destination_node, route['distance_km'])
+
+    if mp.contains(catalog['reverse_edges'], destination_node):
+        me.getValue(mp.get(catalog['reverse_edges'], destination_node)).add(departure_node)
+    else:
+        mp.put(catalog['reverse_edges'], destination_node, set((departure_node)))
     
     if gr.getEdge(dgraph, destination_node, departure_node) is not None:
         if firstdir == None:

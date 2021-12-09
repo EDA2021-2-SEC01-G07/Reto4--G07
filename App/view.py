@@ -246,7 +246,7 @@ while True:
     elif int(inputs[0]) == 6:#Req5
         start_time = time.process_time()
         iata = input('IATA code of closing airport: ')
-        dir_edges, dir_size, dual_edges, dual_size = controller.req5(catalog,iata)
+        dir_edges, dir_size, dual_edges, dual_size, runnable = controller.req5(catalog,iata)
         end_time=(time.process_time() - start_time)*1000
 
         print('='*7,'Req No. 5 Inputs','='*7)
@@ -263,7 +263,7 @@ while True:
         print('Original number of Airports:', gr.numVertices(catalog['dual_connections'])-1, 'and edges:', int(gr.numEdges(catalog['dual_connections']))- int(dual_size) )
 
         print('='*7,'Req No. 5 Answers','='*7)
-        print(f"There are {lt.size(dir_edges)} airports affected by the removal of {iata}")
+        print(f"There are {dir_size} airports affected by the removal of {iata}")
         print("The affected airports are:")
         table=pt.PrettyTable(hrules=pt.ALL)
         table.field_names = ['IATA', 'Name', 'City', 'Country']
@@ -273,7 +273,7 @@ while True:
                 table.add_row([b, info["Name"], info["City"], info["Country"]])
         else:
             first = lt.subList(dir_edges, 1, 3)
-            last = lt.subList(dir_edges, lt.size(dir_edges)-2, lt.size(dir_edges))
+            last = lt.subList(dir_edges, lt.size(dir_edges)-2, 3)
             for b in lt.iterator(first):
                 info = mp.get(catalog['airports'], b)['value']
                 table.add_row([b, info["Name"], info["City"], info["Country"]])
@@ -281,6 +281,7 @@ while True:
                 info = mp.get(catalog['airports'], b)['value']
                 table.add_row([b, info["Name"], info["City"], info["Country"]])
         print(table)
+        print("\n\n"+str(runnable)+"\n\n")
 
         print("The processing time is: ",end_time, " ms.")
     else:
