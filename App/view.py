@@ -258,11 +258,20 @@ while True:
         
         print('\n+++ Removing the airport with IATA code:',iata,'+++')
         print('\n--- Airports-Routes DiGraph ---')
-        print('Original number of Airports:', gr.numVertices(catalog['dir_connections']), 'and edges:', int(gr.numEdges(catalog['dir_connections'])) - int(dir_size) )
+        print('Original number of Airports:', gr.numVertices(catalog['dir_connections'])-1, 'and edges:', int(gr.numEdges(catalog['dir_connections'])) - int(dir_size) )
         print('\n---','Airports-Routes DiGraph','---')
-        print('Original number of Airports:', gr.numVertices(catalog['dual_connections']), 'and edges:', int(gr.numEdges(catalog['dual_connections']))- int(dual_size) )
+        print('Original number of Airports:', gr.numVertices(catalog['dual_connections'])-1, 'and edges:', int(gr.numEdges(catalog['dual_connections']))- int(dual_size) )
 
         print('='*7,'Req No. 5 Answers','='*7)
+        print(f"There are {lt.size(dir_edges)} airports affected by the removal of {iata}")
+        print("The affected airports are:")
+        table=pt.PrettyTable(hrules=pt.ALL)
+        table.field_names = ['IATA', 'Name', 'City', 'Country']
+        for b in lt.iterator(dir_edges):
+            info = mp.get(catalog['airports'], b)['value']
+            table.add_row([b, info["Name"], info["City"], info["Country"]])
+        
+        print(table)
 
         print("The processing time is: ",end_time, " ms.")
     else:
