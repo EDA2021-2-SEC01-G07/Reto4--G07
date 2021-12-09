@@ -1,16 +1,12 @@
 import sys
 import config as cf
 from DISClib.ADT import list as lt
-from DISClib.ADT import map as mp
-from DISClib.DataStructures import mapentry as me
-from DISClib.Algorithms.Sorting import shellsort as sa
-from DISClib.ADT import orderedmap as om
 from DISClib.ADT.graph import gr
 from model.misc import cityToAirport
 import DISClib.Algorithms.Graphs.prim as pr
-import DISClib.Algorithms.Graphs.dijsktra as djk
 import DISClib.Algorithms.Graphs.dfs as dfs
 import DISClib.ADT.queue as q
+import DISClib.ADT.stack as st
 def Millas(catalog, city, miles):
     """
     Se hace dijkstra al aeropuerto seleccionado. 
@@ -24,48 +20,32 @@ def Millas(catalog, city, miles):
     """
 
     airport=cityToAirport(catalog, city)[0]
-    connected_airports=1
-    total_distance=0
-    longest=0   
-    edges = gr.vertices(catalog['dir_connections'])
-    # ==================================================================================================
-    mst=pr.PrimMST(catalog['dual_connections'])
-    print(mst['mst'])
+    longest=0
+    final_path=None
+    nodes=lt.newList(datastructure="ARRAY_LIST")
+
+    prim_search = pr.PrimMST(catalog['dual_connections'])
+    path = prim_search['mst']
+    weight = pr.weightMST(catalog['dual_connections'], prim_search)
     
-    df=dfs.DepthFirstSearch(catalog['dir_connections'],airport['IATA'])
-    for e in lt.iterator(edges):
+    # print(prim_search['edgeTo']['table'])
+    
+    while not q.isEmpty(path):
+        edge = q.dequeue(path)
+        if lt.isPresent(nodes, edge['vertexA'])==0:
+            lt.addLast(nodes, edge['vertexA'])
+        if lt.isPresent(nodes, edge['vertexB'])==0:
+            lt.addLast(nodes, edge['vertexB'])
+            
+    connected=lt.size(nodes)
+    
+    df=dfs.DepthFirstSearch(catalog['dual_connections'],airport['IATA'])   
+    for e in lt.iterator(nodes):
         if dfs.hasPathTo(df,e) == True:
-            connected_airports += 1
-            path_size = lt.size(dfs.pathTo(df,e))
-            if path_size > longest:
-                destination = e
-                longest = path_size
-    final_path=dfs.pathTo(df,destination)
-    vertex_A=airport['IATA']
-    for path in lt.iterator(final_path):
-        connection=gr.getEdge(catalog['dir_connections'],vertex_A,path)
-        if connection != None:
-            total_distance+=connection['weight']
-        vertex_A=path
-        
-    sys.exit(0)
-    return airport, connected_airports, final_path, total_distance
+            route = dfs.pathTo(df,e)      
+            if st.size(route) > longest:
+                final_path = route
+                longest = st.size(route)
 
-    
-    
-    #=======================================================================================================
-
-    for e in lt.iterator(edges):
-        if djk.hasPathTo(dijkstra,e) == True:
-            connected_airport+=1
-            distance=float(djk.distTo(dijkstra,e))
-            total_distance+=distance
-            jumps=lt.size(djk.pathTo(dijkstra,e))
-            if jumps>longest:
-                longest=jumps
-                destination=e
-                destination_dist=distance
-
-    final_path=djk.pathTo(dijkstra,destination)
-
-    return airport, connected_airport, total_distance, final_path, destination_dist
+    #Da la misma longitud que el ejemplo, pero distinto vertice final
+    return airport, connected, final_path, weight
