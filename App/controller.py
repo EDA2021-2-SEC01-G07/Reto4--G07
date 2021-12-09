@@ -49,11 +49,7 @@ def loadData(catalog):
     Carga los datos de los archivos y cargar los datos en la
     estructura de datos
     """
-<<<<<<< HEAD
-    airports = cf.data_dir + 'airports-utf8-10pct.csv'
-=======
     airports = cf.data_dir + 'airports-utf8-large.csv'
->>>>>>> 44b5e6e7f244d777186141579aa7782ddb260a4c
     airports_file = csv.DictReader(open(airports, encoding='utf-8'))
     first=next(airports_file)
     firstdir=None
@@ -61,11 +57,7 @@ def loadData(catalog):
     for airport in airports_file:
         ct.addAirport(catalog, airport)
     
-<<<<<<< HEAD
-    routes = cf.data_dir + 'routes-utf8-10pct.csv'
-=======
     routes = cf.data_dir + 'routes-utf8-large.csv'
->>>>>>> 44b5e6e7f244d777186141579aa7782ddb260a4c
     routes_file = csv.DictReader(open(routes, encoding='utf-8'))    
     for route in routes_file:
         a = ct.addConnections(catalog, route, firstdir)
