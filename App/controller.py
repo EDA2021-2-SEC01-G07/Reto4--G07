@@ -28,7 +28,7 @@ import model.req2 as rq2
 import model.req1 as rq1
 import model.req3 as rq3
 import model.req4 as rq4
-# import model.req5 as rq5
+import model.req5 as rq5
 import csv
 
 
@@ -86,3 +86,6 @@ def req3(catalog,origin_city,destiny_city):
 
 def req4(catalog, city, miles):
     return rq4.Millas(catalog, city, miles)
+
+def req5(catalog, iata):
+    return rq5.closedAirport(catalog,iata)

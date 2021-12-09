@@ -106,7 +106,35 @@ while True:
         print(table)    
         print("The processing time is: ",end_time, " ms.")
     elif int(inputs[0]) == 3:#Req2
-        print(controller.req2(catalog, input("Iata 1: "), input("Iata 2: ")))
+        iatat1=input('Iata code 1: ')
+        iatat2=input('Iata code 2: ')
+        start_time = time.process_time()
+        result=controller.req2(catalog, iatat1, iatat2)
+        end_time=(time.process_time() - start_time)*1000
+
+        print('='*7,'Req No. 2 Inputs','='*7)
+        print('Airport-1 IATA Code:', iatat1)
+        print('Airport-2 IATA Code:', iatat2)
+
+        print('='*7,'Req No. 2 Answer','='*7)
+        print('+'*3, 'Airport1 IATA Code:', iatat1,'+'*3)
+        airport1=mp.get(catalog['airports'],iatat1)['value']
+        table1=pt.PrettyTable(hrules=pt.ALL)
+        table1.field_names=['IATA','Name','City','Country']
+        table1.add_row([airport1['IATA'],airport1['Name'],airport1['City'],airport1['Country']])
+        print(table1,'\n')
+
+        print('+'*3, 'Airport2 IATA Code:', iatat2,'+'*3)
+        airport2=mp.get(catalog['airports'],iatat2)['value']
+        table2=pt.PrettyTable(hrules=pt.ALL)
+        table2.field_names=['IATA','Name','City','Country']
+        table2.add_row([airport2['IATA'],airport2['Name'],airport2['City'],airport2['Country']])
+        print(table2,'\n')
+
+        print('- Number of SCC in Airport-Route network:', result[0])
+        print('- Does the',airport1['Name'],'and the', airport2['Name'],'belong together?')
+        print('- AND:', result[1])
+        print("The processing time is: ",end_time, " ms.")
     elif int(inputs[0]) == 4:#Req3
         origin=input('Ciudad de salida: ')
         destiny=input('Ciudad de llegada: ')
@@ -116,7 +144,7 @@ while True:
         last=''
         if lt.size(origin_city)>1:
             chooseCity(origin_city)
-            ocity_opt=int(input('Varias ciudades encontradas bajo el mismo nombre, seleccione una opcion:'))
+            ocity_opt=int(input('Varias ciudades encontradas bajo el mismo nombre, seleccione una opcion: '))
             selected_ocity=lt.getElement(origin_city,ocity_opt)
         else:
             selected_ocity=lt.firstElement(origin_city)
@@ -214,9 +242,28 @@ while True:
             print('The passenger CAN complete the trip with available miles. ')
         print('-'*5)
         print("The processing time is: ",end_time, " ms.")
-        
-    elif int(inputs[0]) == 6:#Req5
-        pass
 
+    elif int(inputs[0]) == 6:#Req5
+        start_time = time.process_time()
+        iata = input('IATA code of closing airport: ')
+        dir_edges, dir_size, dual_edges, dual_size = controller.req5(catalog,iata)
+        end_time=(time.process_time() - start_time)*1000
+
+        print('='*7,'Req No. 5 Inputs','='*7)
+        print('Closing the airport with IATA code:',iata)
+        print('\n--- Airports-Routes DiGraph ---')
+        print('Original number of Airports:', gr.numVertices(catalog['dir_connections']), 'and edges:', gr.numEdges(catalog['dir_connections']))
+        print('\n---','Airports-Routes DiGraph','---')
+        print('Original number of Airports:', gr.numVertices(catalog['dual_connections']), 'and edges:', gr.numEdges(catalog['dual_connections']))
+        
+        print('\n+++ Removing the airport with IATA code:',iata,'+++')
+        print('\n--- Airports-Routes DiGraph ---')
+        print('Original number of Airports:', gr.numVertices(catalog['dir_connections']), 'and edges:', int(gr.numEdges(catalog['dir_connections'])) - int(dir_size) )
+        print('\n---','Airports-Routes DiGraph','---')
+        print('Original number of Airports:', gr.numVertices(catalog['dual_connections']), 'and edges:', int(gr.numEdges(catalog['dual_connections']))- int(dual_size) )
+
+        print('='*7,'Req No. 5 Answers','='*7)
+
+        print("The processing time is: ",end_time, " ms.")
     else:
         sys.exit(0)

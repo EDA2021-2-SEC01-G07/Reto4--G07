@@ -29,9 +29,9 @@ def Millas(catalog, city, miles):
     longest=0   
     edges = gr.vertices(catalog['dir_connections'])
     # ==================================================================================================
-    mst=pr.PrimMST(catalog['dir_connections'])
-
-
+    mst=pr.PrimMST(catalog['dual_connections'])
+    print(mst['mst'])
+    
     df=dfs.DepthFirstSearch(catalog['dir_connections'],airport['IATA'])
     for e in lt.iterator(edges):
         if dfs.hasPathTo(df,e) == True:
