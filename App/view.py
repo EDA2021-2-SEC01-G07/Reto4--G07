@@ -267,10 +267,19 @@ while True:
         print("The affected airports are:")
         table=pt.PrettyTable(hrules=pt.ALL)
         table.field_names = ['IATA', 'Name', 'City', 'Country']
-        for b in lt.iterator(dir_edges):
-            info = mp.get(catalog['airports'], b)['value']
-            table.add_row([b, info["Name"], info["City"], info["Country"]])
-        
+        if lt.size(dir_edges) < 6:
+            for b in lt.iterator(dir_edges):
+                info = mp.get(catalog['airports'], b)['value']
+                table.add_row([b, info["Name"], info["City"], info["Country"]])
+        else:
+            first = lt.subList(dir_edges, 1, 3)
+            last = lt.subList(dir_edges, lt.size(dir_edges)-2, lt.size(dir_edges))
+            for b in lt.iterator(first):
+                info = mp.get(catalog['airports'], b)['value']
+                table.add_row([b, info["Name"], info["City"], info["Country"]])
+            for b in lt.iterator(last):
+                info = mp.get(catalog['airports'], b)['value']
+                table.add_row([b, info["Name"], info["City"], info["Country"]])
         print(table)
 
         print("The processing time is: ",end_time, " ms.")
