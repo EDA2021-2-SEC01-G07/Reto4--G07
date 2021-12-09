@@ -210,7 +210,8 @@ while True:
             selected_city=lt.firstElement(ocity)
 
         start_time = time.process_time()
-        airport, connected_airport, total_distance, final_path, longest = controller.req4(catalog, selected_city, miles)
+
+        airport, connected, final_path, weight = controller.req4(catalog, selected_city, miles)
         end_time=(time.process_time() - start_time)*1000
 
         print('='*7,'Req No. 4 Inputs','='*7)
@@ -223,23 +224,32 @@ while True:
         table.add_row([airport['IATA'],airport['Name'],airport['City'],airport['Country']])
         print(table)
 
-        print('-Number of possible airports:',connected_airport)
-        print('-Max traveling distance between airports:', round(total_distance,2),'(km)')
+        print('-Number of possible airports:', connected)
+        print('-Max traveling distance between airports:', round(float(weight),2),'(km)')
         print('-Available traveling miles:', miles,'(km)\n')
         
         print('+++ Longest possible route with airport: ',airport['IATA'],'+++')
-        print('- Longests possible path distance: ',round(float(longest),2)*2,'(km) back and forth from the destination.')
-        print('- Longest possible path details: ')
+       
+        last=''
+        total_weight=0
         table2=pt.PrettyTable(hrules=pt.ALL)
         table2.field_names=['Departure','Destination','Distance (km)']
         for a in lt.iterator(final_path):
-            table2.add_row([a['vertexA'],a['vertexB'],round(a['weight'],2)])
+            if last != '':
+                weight = gr.getEdge(catalog['dual_connections'], last, a)['weight']
+                table2.add_row([last,a,round(float(weight),2)])
+                total_weight += weight
+            last = a
+        print('- Longests possible path distance: ',round(float(total_weight),2)*2,'(km) back and forth from the destination or ', round(float(total_weight),2),'one way trip.')
+        print('- Longest possible path details: ')
         print(table2)
         print('-'*5)
-        if longest>miles:
-            print('The passenger needs ', round(longest*2-miles,2),'miles to complete the trip.')
+
+        if total_weight*2 > miles:
+            print('The passenger needs ', round(total_weight*2/1.6 - miles/1.6,2),'miles to complete the trip.')
         else:
             print('The passenger CAN complete the trip with available miles. ')
+        
         print('-'*5)
         print("The processing time is: ",end_time, " ms.")
 
@@ -253,7 +263,7 @@ while True:
         print('Closing the airport with IATA code:',iata)
         print('\n--- Airports-Routes DiGraph ---')
         print('Original number of Airports:', gr.numVertices(catalog['dir_connections']), 'and edges:', gr.numEdges(catalog['dir_connections']))
-        print('\n---','Airports-Routes DiGraph','---')
+        print('---','Airports-Routes Graph','---')
         print('Original number of Airports:', gr.numVertices(catalog['dual_connections']), 'and edges:', gr.numEdges(catalog['dual_connections']))
         
         print('\n+++ Removing the airport with IATA code:',iata,'+++')
